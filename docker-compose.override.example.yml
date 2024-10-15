@@ -1,0 +1,19 @@
+---
+services:
+  reverse-proxy:
+    environment:
+      - PUID=1001 #  check `id command` 
+      - PGID=1001 #  check `id command` 
+  db:
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin   # à changer 
+      - MYSQL_PASSWORD=admin   # à changer
+
+  bookstack:
+    environment:
+      - PUID=1001 #  check `id command` 
+      - PGID=1001 #  check `id command` 
+      - APP_URL=http://domainhere  # à changer	
+      - APP_KEY=yourappkeyhere  # à changer
+      - DB_PORT=3306
+      - DB_PASSWORD=admin  # à changer 

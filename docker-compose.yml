@@ -1,0 +1,47 @@
+---
+services:
+  reverse-proxy:
+    image: lscr.io/linuxserver/nginx:amd64-1.26.2
+    container_name: nginx
+    volumes:
+      - ./vhost/default.conf:/config/nginx/site-confs/default.conf
+    environment:
+      - PUID=1001 #  check `id command` 
+      - PGID=1001 #  check `id command` 
+      - TZ=Europe/Paris
+    ports:
+      - "9999:80"
+    restart: unless-stopped
+
+  db:
+    image: lscr.io/linuxserver/mariadb:amd64-10.11.8
+    container_name: db
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin
+      - MYSQL_DATABASE=bookstack
+    volumes:
+      - ./mysql:/config
+    restart: unless-stopped
+
+  bookstack:
+    image: lscr.io/linuxserver/bookstack:amd64-24.10.20241014
+    container_name: bookstack
+    environment:
+      - PUID=1001 #  check `id command` 
+      - PGID=1001 #  check `id command` 
+      - TZ=Europe/Paris
+      - APP_URL=http://domainhere
+      - APP_KEY=secretkeyhere
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USERNAME=admin
+      - DB_PASSWORD=admin
+      - DB_DATABASE=bookstack
+    depends_on:
+      db:
+        condition: service_started
+      reverse-proxy:
+        condition: service_started
+    restart: unless-stopped
