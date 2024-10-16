@@ -4,6 +4,7 @@ services:
     environment:
       - PUID=1001 #  check `id command` 
       - PGID=1001 #  check `id command` 
+
   db:
     environment:
       - MYSQL_ROOT_PASSWORD=admin   # à changer 
